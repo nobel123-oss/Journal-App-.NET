@@ -1,0 +1,200 @@
+@page "/calendar"
+@inject IJournalRepository Repository
+@inject NavigationManager Navigation
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>Calendar</h1>
+        <p class="page-subtitle">Navigate entries by date</p>
+    </div>
+
+    <div class="calendar-controls">
+        <button @onclick="PreviousMonth" class="btn-secondary">← Previous</button>
+        <h2>@currentMonth.ToString("MMMM yyyy")</h2>
+        <button @onclick="NextMonth" class="btn-secondary">Next →</button>
+    </div>
+
+    <div class="calendar-grid">
+        <div class="calendar-header">
+            <div class="calendar-day-name">Sun</div>
+            <div class="calendar-day-name">Mon</div>
+            <div class="calendar-day-name">Tue</div>
+            <div class="calendar-day-name">Wed</div>
+            <div class="calendar-day-name">Thu</div>
+            <div class="calendar-day-name">Fri</div>
+            <div class="calendar-day-name">Sat</div>
+        </div>
+
+        <div class="calendar-body">
+            @foreach (var week in calendarDays)
+            {
+                @foreach (var day in week)
+                {
+                    <div class="calendar-day @GetDayClasses(day)" @onclick="() => SelectDate(day)">
+                        <div class="day-number">@(day.Date == DateTime.MinValue ? "" : day.Date.Day.ToString())</div>
+                        @if (day.HasEntry)
+                        {
+                            <div class="day-indicator">●</div>
+                            @if (day.Entry?.PrimaryMood != null)
+                            {
+                                <div class="day-mood">@day.Entry.PrimaryMood.Emoji</div>
+                            }
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    @if (selectedEntry != null)
+    {
+        <div class="entry-preview-panel">
+            <h3>@selectedEntry.Date.ToString("MMMM d, yyyy")</h3>
+            <h4>@selectedEntry.Title</h4>
+            <p class="mood-display">@selectedEntry.PrimaryMood?.Emoji @selectedEntry.PrimaryMood?.Name</p>
+            <p class="content-preview">@GetContentPreview(selectedEntry.Content)</p>
+            <button @onclick="() => ViewEntry(selectedEntry.Id)" class="btn-primary">View Full Entry</button>
+        </div>
+    }
+</div>
+
+@code {
+    private class CalendarDay
+    {
+        public DateTime Date { get; set; }
+        public bool HasEntry { get; set; }
+        public JournalEntry? Entry { get; set; }
+    }
+
+    private DateTime currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+    private List<List<CalendarDay>> calendarDays = new();
+    private Dictionary<DateTime, JournalEntry> entriesByDate = new();
+    private JournalEntry? selectedEntry;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMonth();
+    }
+
+    private async Task LoadMonth()
+    {
+        var startDate = currentMonth;
+        var endDate = currentMonth.AddMonths(1).AddDays(-1);
+        
+        var entries = await Repository.GetEntriesByDateRangeAsync(startDate, endDate);
+        entriesByDate = entries.ToDictionary(e => e.Date.Date);
+
+        GenerateCalendar();
+    }
+
+    private void GenerateCalendar()
+    {
+        calendarDays.Clear();
+
+        var firstDayOfMonth = currentMonth;
+        var lastDayOfMonth = currentMonth.AddMonths(1).AddDays(-1);
+        var startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+
+        var currentWeek = new List<CalendarDay>();
+
+        // Add empty days before month starts
+        for (int i = 0; i < startDayOfWeek; i++)
+        {
+            currentWeek.Add(new CalendarDay { Date = DateTime.MinValue });
+        }
+
+        // Add days of the month
+        for (var date = firstDayOfMonth; date <= lastDayOfMonth; date = date.AddDays(1))
+        {
+            var hasEntry = entriesByDate.ContainsKey(date.Date);
+            currentWeek.Add(new CalendarDay
+            {
+                Date = date,
+                HasEntry = hasEntry,
+                Entry = hasEntry ? entriesByDate[date.Date] : null
+            });
+
+            if (currentWeek.Count == 7)
+            {
+                calendarDays.Add(currentWeek);
+                currentWeek = new List<CalendarDay>();
+            }
+        }
+
+        // Add empty days after month ends
+        if (currentWeek.Any())
+        {
+            while (currentWeek.Count < 7)
+            {
+                currentWeek.Add(new CalendarDay { Date = DateTime.MinValue });
+            }
+            calendarDays.Add(currentWeek);
+        }
+    }
+
+    private string GetDayClasses(CalendarDay day)
+    {
+        if (day.Date == DateTime.MinValue)
+            return "empty";
+
+        var classes = new List<string>();
+
+        if (day.Date.Date == DateTime.Today)
+            classes.Add("today");
+
+        if (day.HasEntry)
+            classes.Add("has-entry");
+
+        if (selectedEntry != null && day.Date.Date == selectedEntry.Date.Date)
+            classes.Add("selected");
+
+        return string.Join(" ", classes);
+    }
+
+    private async Task SelectDate(CalendarDay day)
+    {
+        if (day.Date == DateTime.MinValue)
+            return;
+
+        if (day.HasEntry && day.Entry != null)
+        {
+            selectedEntry = day.Entry;
+        }
+        else
+        {
+            selectedEntry = null;
+            // Navigate to create entry for this date
+            if (day.Date.Date == DateTime.Today)
+            {
+                Navigation.NavigateTo("/today");
+            }
+        }
+    }
+
+    private async Task PreviousMonth()
+    {
+        currentMonth = currentMonth.AddMonths(-1);
+        selectedEntry = null;
+        await LoadMonth();
+    }
+
+    private async Task NextMonth()
+    {
+        currentMonth = currentMonth.AddMonths(1);
+        selectedEntry = null;
+        await LoadMonth();
+    }
+
+    private void ViewEntry(int id)
+    {
+        Navigation.NavigateTo($"/today?id={id}");
+    }
+
+    private string GetContentPreview(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+            return string.Empty;
+
+        return content.Length > 200 ? content.Substring(0, 200) + "..." : content;
+    }
+}

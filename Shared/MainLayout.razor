@@ -1,0 +1,90 @@
+@inherits LayoutComponentBase
+@inject AuthService AuthService
+@inject ISettingsRepository SettingsRepository
+@inject NavigationManager Navigation
+
+<div class="app-container @themeClass">
+    @if (isLocked)
+    {
+        <Lock OnUnlocked="HandleUnlocked" />
+    }
+    else
+    {
+        <div class="main-layout">
+            <nav class="sidebar">
+                <div class="app-title">
+                    <h1>Journal</h1>
+                </div>
+                
+                <div class="nav-links">
+                    <NavLink href="/" Match="NavLinkMatch.All" class="nav-link">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">Home</span>
+                    </NavLink>
+                    
+                    <NavLink href="/today" class="nav-link">
+                        <span class="nav-icon">✏️</span>
+                        <span class="nav-text">Today</span>
+                    </NavLink>
+                    
+                    <NavLink href="/calendar" class="nav-link">
+                        <span class="nav-icon">📅</span>
+                        <span class="nav-text">Calendar</span>
+                    </NavLink>
+                    
+                    <NavLink href="/timeline" class="nav-link">
+                        <span class="nav-icon">📖</span>
+                        <span class="nav-text">Timeline</span>
+                    </NavLink>
+                    
+                    <NavLink href="/analytics" class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Analytics</span>
+                    </NavLink>
+                    
+                    <NavLink href="/settings" class="nav-link">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">Settings</span>
+                    </NavLink>
+                </div>
+
+                <div class="sidebar-footer">
+                    <p class="app-version">v1.0</p>
+                </div>
+            </nav>
+
+            <main class="content">
+                @Body
+            </main>
+        </div>
+    }
+</div>
+
+@code {
+    private bool isLocked = false;
+    private string themeClass = "light-theme";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckLockStatus();
+        await LoadTheme();
+    }
+
+    private async Task CheckLockStatus()
+    {
+        isLocked = await AuthService.IsLockedAsync();
+    }
+
+    private async Task LoadTheme()
+    {
+        var settings = await SettingsRepository.GetSettingsAsync();
+        themeClass = settings.Theme.ToLower() == "dark" ? "dark-theme" : "light-theme";
+    }
+
+    private async Task HandleUnlocked()
+    {
+        isLocked = false;
+        await LoadTheme();
+        StateHasChanged();
+    }
+}

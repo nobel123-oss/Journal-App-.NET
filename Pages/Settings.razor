@@ -1,0 +1,213 @@
+@page "/settings"
+@inject ISettingsRepository SettingsRepository
+@inject AuthService AuthService
+@inject ExportPdfService ExportService
+@inject IJournalRepository Repository
+@inject IJSRuntime JS
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>Settings</h1>
+        <p class="page-subtitle">Customize your journal</p>
+    </div>
+
+    <div class="settings-sections">
+        <!-- Theme Settings -->
+        <div class="settings-section">
+            <h2>Appearance</h2>
+            <div class="setting-item">
+                <label>Theme</label>
+                <select @bind="selectedTheme" @bind:after="SaveTheme" class="form-select">
+                    <option value="Light">Light</option>
+                    <option value="Dark">Dark</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="settings-section">
+            <h2>Security & Privacy</h2>
+            
+            @if (!hasPassword)
+            {
+                <div class="setting-item">
+                    <p>Set a password to protect your journal</p>
+                    <input type="password" @bind="newPassword" placeholder="Enter password" class="form-input" />
+                    <input type="password" @bind="confirmPassword" placeholder="Confirm password" class="form-input" />
+                    <button @onclick="SetPassword" class="btn-primary">Set Password</button>
+                </div>
+            }
+            else
+            {
+                <div class="setting-item">
+                    <p>Password protection is enabled</p>
+                    <button @onclick="RemovePassword" class="btn-danger">Remove Password</button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(securityMessage))
+            {
+                <p class="@(securityError ? "error-message" : "success-message")">@securityMessage</p>
+            }
+        </div>
+
+        <!-- Export Settings -->
+        <div class="settings-section">
+            <h2>Export Journal</h2>
+            <div class="setting-item">
+                <label>Start Date</label>
+                <input type="date" @bind="exportStartDate" class="form-input" />
+            </div>
+            <div class="setting-item">
+                <label>End Date</label>
+                <input type="date" @bind="exportEndDate" class="form-input" />
+            </div>
+            <button @onclick="ExportToPdf" class="btn-primary" disabled="@isExporting">
+                @(isExporting ? "Exporting..." : "Export to PDF")
+            </button>
+
+            @if (!string.IsNullOrEmpty(exportMessage))
+            {
+                <p class="@(exportError ? "error-message" : "success-message")">@exportMessage</p>
+            }
+        </div>
+
+        <!-- About -->
+        <div class="settings-section">
+            <h2>About</h2>
+            <p>Journal App v1.0</p>
+            <p>A secure, private journaling application</p>
+            <p class="text-muted">© 2026 Journal App</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool hasPassword;
+    private string selectedTheme = "Light";
+    private string newPassword = string.Empty;
+    private string confirmPassword = string.Empty;
+    private string securityMessage = string.Empty;
+    private bool securityError = false;
+
+    private DateTime exportStartDate = DateTime.Today.AddMonths(-1);
+    private DateTime exportEndDate = DateTime.Today;
+    private bool isExporting = false;
+    private string exportMessage = string.Empty;
+    private bool exportError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSettings();
+    }
+
+    private async Task LoadSettings()
+    {
+        var settings = await SettingsRepository.GetSettingsAsync();
+        selectedTheme = settings.Theme;
+        hasPassword = await AuthService.HasPasswordAsync();
+    }
+
+    private async Task SaveTheme()
+    {
+        var settings = await SettingsRepository.GetSettingsAsync();
+        settings.Theme = selectedTheme;
+        await SettingsRepository.UpdateSettingsAsync(settings);
+
+        // Reload page to apply theme
+        await JS.InvokeVoidAsync("location.reload");
+    }
+
+    private async Task SetPassword()
+    {
+        securityMessage = string.Empty;
+        securityError = false;
+
+        if (string.IsNullOrWhiteSpace(newPassword))
+        {
+            securityMessage = "Password cannot be empty";
+            securityError = true;
+            return;
+        }
+
+        if (newPassword != confirmPassword)
+        {
+            securityMessage = "Passwords do not match";
+            securityError = true;
+            return;
+        }
+
+        if (newPassword.Length < 4)
+        {
+            securityMessage = "Password must be at least 4 characters";
+            securityError = true;
+            return;
+        }
+
+        try
+        {
+            await AuthService.SetPasswordAsync(newPassword);
+            hasPassword = true;
+            newPassword = string.Empty;
+            confirmPassword = string.Empty;
+            securityMessage = "Password set successfully";
+        }
+        catch (Exception ex)
+        {
+            securityMessage = $"Error setting password: {ex.Message}";
+            securityError = true;
+        }
+    }
+
+    private async Task RemovePassword()
+    {
+        securityMessage = string.Empty;
+        securityError = false;
+
+        try
+        {
+            await AuthService.RemovePasswordAsync();
+            hasPassword = false;
+            securityMessage = "Password removed successfully";
+        }
+        catch (Exception ex)
+        {
+            securityMessage = $"Error removing password: {ex.Message}";
+            securityError = true;
+        }
+    }
+
+    private async Task ExportToPdf()
+    {
+        exportMessage = string.Empty;
+        exportError = false;
+        isExporting = true;
+
+        try
+        {
+            if (exportStartDate > exportEndDate)
+            {
+                exportMessage = "Start date must be before end date";
+                exportError = true;
+                isExporting = false;
+                return;
+            }
+
+            var fileName = ExportService.GetSuggestedFileName(exportStartDate, exportEndDate);
+            var downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var filePath = Path.Combine(downloadsPath, fileName);
+
+            await ExportService.ExportToPdfAsync(exportStartDate, exportEndDate, filePath);
+            exportMessage = $"Exported successfully to {filePath}";
+        }
+        catch (Exception ex)
+        {
+            exportMessage = $"Error exporting: {ex.Message}";
+            exportError = true;
+        }
+        finally
+        {
+            isExporting = false;
+        }
+    }
+}

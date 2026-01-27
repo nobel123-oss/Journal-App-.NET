@@ -1,0 +1,65 @@
+@using JournalApp.Models
+
+<div class="mood-picker">
+    @if (AllowClear && SelectedMoodId.HasValue)
+    {
+        <button @onclick="ClearSelection" class="mood-clear">✕ Clear</button>
+    }
+    
+    <div class="mood-groups">
+        @foreach (var group in MoodsByCategory)
+        {
+            <div class="mood-group">
+                <h4 class="mood-category-title">@group.Key</h4>
+                <div class="mood-options">
+                    @foreach (var mood in group.Value)
+                    {
+                        <button 
+                            @onclick="() => SelectMood(mood.Id)"
+                            class="mood-button @(SelectedMoodId == mood.Id ? "selected" : "")">
+                            <span class="mood-emoji">@mood.Emoji</span>
+                            <span class="mood-name">@mood.Name</span>
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<Mood> Moods { get; set; } = new();
+
+    [Parameter]
+    public int? SelectedMoodId { get; set; }
+
+    [Parameter]
+    public bool AllowClear { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<int?> OnMoodSelected { get; set; }
+
+    private Dictionary<string, List<Mood>> MoodsByCategory => 
+        Moods.GroupBy(m => m.Category)
+              .ToDictionary(g => g.Key, g => g.ToList());
+
+    private async Task SelectMood(int moodId)
+    {
+        if (AllowClear)
+        {
+            await OnMoodSelected.InvokeAsync(moodId);
+        }
+        else
+        {
+            SelectedMoodId = moodId;
+            await OnMoodSelected.InvokeAsync(moodId);
+        }
+    }
+
+    private async Task ClearSelection()
+    {
+        SelectedMoodId = null;
+        await OnMoodSelected.InvokeAsync(null);
+    }
+}

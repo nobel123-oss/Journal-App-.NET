@@ -1,0 +1,121 @@
+@using JournalApp.Models
+
+<div class="tag-picker">
+    <div class="tag-input-section">
+        <input 
+            type="text" 
+            @bind="newTagName" 
+            @onkeypress="HandleKeyPress"
+            placeholder="Type to add custom tag..." 
+            class="tag-input" />
+        <button @onclick="AddCustomTag" class="btn-secondary">Add Tag</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(tagError))
+    {
+        <p class="error-message">@tagError</p>
+    }
+
+    <div class="selected-tags">
+        <h4>Selected Tags</h4>
+        <div class="tag-list">
+            @if (SelectedTagIds.Any())
+            {
+                @foreach (var tagId in SelectedTagIds)
+                {
+                    var tag = AllTags.FirstOrDefault(t => t.Id == tagId);
+                    if (tag != null)
+                    {
+                        <span class="tag-chip selected">
+                            @tag.Name
+                            <button @onclick="() => RemoveTag(tagId)" class="tag-remove">×</button>
+                        </span>
+                    }
+                }
+            }
+            else
+            {
+                <p class="text-muted">No tags selected</p>
+            }
+        </div>
+    </div>
+
+    <div class="available-tags">
+        <h4>Available Tags</h4>
+        <div class="tag-list">
+            @foreach (var tag in AllTags.Where(t => !SelectedTagIds.Contains(t.Id)))
+            {
+                <button @onclick="() => AddTag(tag.Id)" class="tag-chip">
+                    @tag.Name
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<Tag> AllTags { get; set; } = new();
+
+    [Parameter]
+    public List<int> SelectedTagIds { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<List<int>> OnTagsChanged { get; set; }
+
+    private string newTagName = string.Empty;
+    private string tagError = string.Empty;
+
+    private async Task AddTag(int tagId)
+    {
+        if (!SelectedTagIds.Contains(tagId))
+        {
+            SelectedTagIds.Add(tagId);
+            await OnTagsChanged.InvokeAsync(SelectedTagIds);
+        }
+    }
+
+    private async Task RemoveTag(int tagId)
+    {
+        SelectedTagIds.Remove(tagId);
+        await OnTagsChanged.InvokeAsync(SelectedTagIds);
+    }
+
+    private async Task AddCustomTag()
+    {
+        tagError = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(newTagName))
+        {
+            tagError = "Tag name cannot be empty";
+            return;
+        }
+
+        var existingTag = AllTags.FirstOrDefault(t => 
+            t.Name.Equals(newTagName, StringComparison.OrdinalIgnoreCase));
+
+        if (existingTag != null)
+        {
+            if (!SelectedTagIds.Contains(existingTag.Id))
+            {
+                await AddTag(existingTag.Id);
+            }
+        }
+        else
+        {
+            // Create new tag (this would need repository access)
+            // For now, just show error
+            tagError = "Custom tag creation requires saving the entry first. Use existing tags or add after saving.";
+        }
+
+        newTagName = string.Empty;
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await AddCustomTag();
+        }
+    }
+}

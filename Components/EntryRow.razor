@@ -1,0 +1,74 @@
+@using JournalApp.Models
+
+<div class="entry-row" @onclick="HandleClick">
+    <div class="entry-row-date">
+        <div class="date-day">@Entry.Date.Day</div>
+        <div class="date-month">@Entry.Date.ToString("MMM")</div>
+        <div class="date-year">@Entry.Date.Year</div>
+    </div>
+    
+    <div class="entry-row-content">
+        <h3 class="entry-row-title">@Entry.Title</h3>
+        
+        <div class="entry-row-mood">
+            @Entry.PrimaryMood?.Emoji @Entry.PrimaryMood?.Name
+            @if (Entry.SecondaryMood1 != null)
+            {
+                <span>, @Entry.SecondaryMood1.Emoji @Entry.SecondaryMood1.Name</span>
+            }
+            @if (Entry.SecondaryMood2 != null)
+            {
+                <span>, @Entry.SecondaryMood2.Emoji @Entry.SecondaryMood2.Name</span>
+            }
+        </div>
+
+        <p class="entry-row-preview">@GetContentPreview()</p>
+
+        @if (Entry.EntryTags.Any())
+        {
+            <div class="entry-row-tags">
+                @foreach (var entryTag in Entry.EntryTags.Take(3))
+                {
+                    <span class="tag-badge">@entryTag.Tag?.Name</span>
+                }
+                @if (Entry.EntryTags.Count > 3)
+                {
+                    <span class="tag-badge">+@(Entry.EntryTags.Count - 3) more</span>
+                }
+            </div>
+        }
+
+        <div class="entry-row-meta">
+            <span>@Entry.WordCount words</span>
+            @if (!string.IsNullOrEmpty(Entry.Category))
+            {
+                <span> • @Entry.Category</span>
+            }
+        </div>
+    </div>
+
+    <div class="entry-row-arrow">→</div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public JournalEntry Entry { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    private async Task HandleClick()
+    {
+        await OnClick.InvokeAsync();
+    }
+
+    private string GetContentPreview()
+    {
+        if (string.IsNullOrWhiteSpace(Entry.Content))
+            return string.Empty;
+
+        return Entry.Content.Length > 150 
+            ? Entry.Content.Substring(0, 150) + "..." 
+            : Entry.Content;
+    }
+}

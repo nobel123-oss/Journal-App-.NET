@@ -1,0 +1,198 @@
+@page "/analytics"
+@inject AnalyticsService AnalyticsService
+@inject StreakService StreakService
+@inject IJournalRepository Repository
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>Analytics</h1>
+        <p class="page-subtitle">Insights from your journal</p>
+    </div>
+
+    <div class="analytics-filters">
+        <label>
+            Start Date:
+            <input type="date" @bind="startDate" @bind:after="LoadAnalytics" />
+        </label>
+        <label>
+            End Date:
+            <input type="date" @bind="endDate" @bind:after="LoadAnalytics" />
+        </label>
+        <button @onclick="ClearDateFilter" class="btn-secondary">Clear Dates</button>
+    </div>
+
+    @if (isLoading)
+    {
+        <p>Loading analytics...</p>
+    }
+    else
+    {
+        <div class="analytics-grid">
+            <!-- Streak Stats -->
+            <div class="stat-card large">
+                <h3>Journaling Streaks</h3>
+                <div class="streak-stats">
+                    <div class="streak-item">
+                        <span class="streak-label">Current Streak</span>
+                        <span class="streak-value">🔥 @currentStreak days</span>
+                    </div>
+                    <div class="streak-item">
+                        <span class="streak-label">Longest Streak</span>
+                        <span class="streak-value">🏆 @longestStreak days</span>
+                    </div>
+                    <div class="streak-item">
+                        <span class="streak-label">Total Entries</span>
+                        <span class="streak-value">📝 @totalEntries</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mood Distribution -->
+            <div class="stat-card large">
+                <h3>Mood Distribution</h3>
+                <div class="mood-chart">
+                    @foreach (var mood in moodDistribution)
+                    {
+                        <div class="mood-bar-container">
+                            <span class="mood-label">@mood.Key</span>
+                            <div class="mood-bar">
+                                <div class="mood-bar-fill @mood.Key.ToLower()" 
+                                     style="width: @mood.Value.ToString("F1")%">
+                                </div>
+                                <span class="mood-percentage">@mood.Value.ToString("F1")%</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Most Frequent Mood -->
+            @if (mostFrequentMood.HasValue)
+            {
+                <div class="stat-card">
+                    <h3>Most Frequent Mood</h3>
+                    <div class="featured-stat">
+                        <p class="featured-value">@mostFrequentMood.Value.MoodName</p>
+                        <p class="featured-label">@mostFrequentMood.Value.Count times</p>
+                    </div>
+                </div>
+            }
+
+            <!-- Word Count Stats -->
+            <div class="stat-card">
+                <h3>Writing Stats</h3>
+                <div class="word-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Average Words</span>
+                        <span class="stat-value">@averageWordCount.ToString("F0")</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Words</span>
+                        <span class="stat-value">@totalWordCount.ToString("N0")</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Most Used Tags -->
+            @if (mostUsedTags.Any())
+            {
+                <div class="stat-card large">
+                    <h3>Most Used Tags</h3>
+                    <div class="tag-chart">
+                        @foreach (var tag in mostUsedTags.Take(10))
+                        {
+                            <div class="tag-item">
+                                <span class="tag-name">@tag.TagName</span>
+                                <span class="tag-count">@tag.Count</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Word Count Trends -->
+            @if (wordCountTrends.Any())
+            {
+                <div class="stat-card large">
+                    <h3>Word Count Trends</h3>
+                    <div class="trend-chart">
+                        @foreach (var trend in wordCountTrends)
+                        {
+                            <div class="trend-item">
+                                <span class="trend-label">@trend.Key.ToString("MMM yyyy")</span>
+                                <span class="trend-value">@trend.Value.ToString("F0") words</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Missed Days -->
+            @if (missedDaysCount > 0)
+            {
+                <div class="stat-card">
+                    <h3>Missed Days</h3>
+                    <div class="featured-stat">
+                        <p class="featured-value">@missedDaysCount</p>
+                        <p class="featured-label">days without entries</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private bool isLoading = true;
+    private DateTime? startDate;
+    private DateTime? endDate;
+
+    private int currentStreak;
+    private int longestStreak;
+    private int totalEntries;
+    private Dictionary<string, double> moodDistribution = new();
+    private (string MoodName, int Count)? mostFrequentMood;
+    private List<(string TagName, int Count)> mostUsedTags = new();
+    private Dictionary<DateTime, double> wordCountTrends = new();
+    private double averageWordCount;
+    private int totalWordCount;
+    private int missedDaysCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAnalytics();
+        isLoading = false;
+    }
+
+    private async Task LoadAnalytics()
+    {
+        isLoading = true;
+
+        // Load streak data (not date filtered)
+        currentStreak = await StreakService.GetCurrentStreakAsync();
+        longestStreak = await StreakService.GetLongestStreakAsync();
+        totalEntries = await StreakService.GetTotalEntriesAsync();
+
+        // Load analytics data (date filtered)
+        moodDistribution = await AnalyticsService.GetMoodDistributionAsync(startDate, endDate);
+        mostFrequentMood = await AnalyticsService.GetMostFrequentMoodAsync(startDate, endDate);
+        mostUsedTags = await AnalyticsService.GetMostUsedTagsAsync(10, startDate, endDate);
+        wordCountTrends = await AnalyticsService.GetWordCountTrendsAsync(startDate, endDate);
+        averageWordCount = await AnalyticsService.GetAverageWordCountAsync(startDate, endDate);
+        totalWordCount = await AnalyticsService.GetTotalWordCountAsync(startDate, endDate);
+
+        // Calculate missed days
+        var missedDays = await StreakService.GetMissedDaysAsync(startDate, endDate);
+        missedDaysCount = missedDays.Count;
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task ClearDateFilter()
+    {
+        startDate = null;
+        endDate = null;
+        await LoadAnalytics();
+    }
+}

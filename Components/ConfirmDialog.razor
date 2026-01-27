@@ -1,0 +1,32 @@
+<div class="modal-overlay">
+    <div class="modal-dialog">
+        <h3>Confirm Action</h3>
+        <p>@Message</p>
+        
+        <div class="modal-actions">
+            <button @onclick="HandleConfirm" class="btn-danger">Confirm</button>
+            <button @onclick="HandleCancel" class="btn-secondary">Cancel</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Message { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback OnConfirm { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    private async Task HandleConfirm()
+    {
+        await OnConfirm.InvokeAsync();
+    }
+
+    private async Task HandleCancel()
+    {
+        await OnCancel.InvokeAsync();
+    }
+}

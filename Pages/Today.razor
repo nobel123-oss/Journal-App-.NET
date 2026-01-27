@@ -1,0 +1,347 @@
+@page "/today"
+@inject IJournalRepository Repository
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>@pageTitle</h1>
+        <p class="page-subtitle">@DateTime.Now.ToString("dddd, MMMM d, yyyy")</p>
+    </div>
+
+    @if (isLoading)
+    {
+        <p>Loading...</p>
+    }
+    else if (showConfirmDialog)
+    {
+        <ConfirmDialog 
+            Message="@confirmMessage"
+            OnConfirm="@ConfirmDelete"
+            OnCancel="@CancelDelete" />
+    }
+    else
+    {
+        <div class="entry-form">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" @bind="title" placeholder="Give your entry a title..." class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label>Content</label>
+                <textarea @bind="content" placeholder="Write your thoughts..." class="form-textarea" rows="15"></textarea>
+                <p class="word-count">Word count: @wordCount</p>
+            </div>
+
+            <div class="form-group">
+                <label>Primary Mood <span class="required">*</span></label>
+                <MoodPicker 
+                    Moods="moods"
+                    SelectedMoodId="primaryMoodId"
+                    OnMoodSelected="@HandlePrimaryMoodSelected" />
+            </div>
+
+            <div class="form-group">
+                <label>Secondary Moods (Optional)</label>
+                <div class="secondary-moods">
+                    <MoodPicker 
+                        Moods="moods"
+                        SelectedMoodId="secondaryMood1Id"
+                        OnMoodSelected="@HandleSecondaryMood1Selected"
+                        AllowClear="true" />
+                    
+                    <MoodPicker 
+                        Moods="moods"
+                        SelectedMoodId="secondaryMood2Id"
+                        OnMoodSelected="@HandleSecondaryMood2Selected"
+                        AllowClear="true" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Category (Optional)</label>
+                <input type="text" @bind="category" placeholder="e.g., Personal, Work, Travel..." class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label>Tags (Optional)</label>
+                <TagPicker 
+                    AllTags="allTags"
+                    SelectedTagIds="selectedTagIds"
+                    OnTagsChanged="HandleTagsChanged" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error-message">@errorMessage</div>
+            }
+
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="success-message">@successMessage</div>
+            }
+
+            <div class="form-actions">
+                <button @onclick="SaveEntry" class="btn-primary" disabled="@isSaving">
+                    @(isSaving ? "Saving..." : (isEditMode ? "Update Entry" : "Save Entry"))
+                </button>
+
+                @if (isEditMode)
+                {
+                    <button @onclick="ShowDeleteConfirm" class="btn-danger">Delete Entry</button>
+                }
+
+                <button @onclick="Cancel" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "id")]
+    public int? EntryId { get; set; }
+
+    private bool isLoading = true;
+    private bool isSaving = false;
+    private bool isEditMode = false;
+    private bool showConfirmDialog = false;
+    private string pageTitle = "Today's Entry";
+    private string confirmMessage = string.Empty;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+
+    private int? currentEntryId;
+    private string title = string.Empty;
+    private string content = string.Empty;
+    private string category = string.Empty;
+    private int wordCount = 0;
+    private int? primaryMoodId;
+    private int? secondaryMood1Id;
+    private int? secondaryMood2Id;
+
+    private List<Mood> moods = new();
+    private List<Tag> allTags = new();
+    private List<int> selectedTagIds = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMoods();
+        await LoadTags();
+        await LoadEntry();
+        isLoading = false;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!isLoading)
+        {
+            await LoadEntry();
+        }
+    }
+
+    private async Task LoadMoods()
+    {
+        moods = await Repository.GetAllMoodsAsync();
+    }
+
+    private async Task LoadTags()
+    {
+        allTags = await Repository.GetAllTagsAsync();
+    }
+
+    private async Task LoadEntry()
+    {
+        JournalEntry? entry = null;
+
+        if (EntryId.HasValue)
+        {
+            entry = await Repository.GetEntryByIdAsync(EntryId.Value);
+            pageTitle = $"Entry - {entry?.Date.ToString("MMMM d, yyyy")}";
+        }
+        else
+        {
+            entry = await Repository.GetEntryByDateAsync(DateTime.Today);
+            pageTitle = "Today's Entry";
+        }
+
+        if (entry != null)
+        {
+            isEditMode = true;
+            currentEntryId = entry.Id;
+            title = entry.Title;
+            content = entry.Content;
+            category = entry.Category ?? string.Empty;
+            primaryMoodId = entry.PrimaryMoodId;
+            secondaryMood1Id = entry.SecondaryMood1Id;
+            secondaryMood2Id = entry.SecondaryMood2Id;
+            selectedTagIds = entry.EntryTags.Select(et => et.TagId).ToList();
+            CalculateWordCount();
+        }
+    }
+
+    private void HandlePrimaryMoodSelected(int? moodId)
+    {
+        primaryMoodId = moodId;
+    }
+
+    private void HandleSecondaryMood1Selected(int? moodId)
+    {
+        secondaryMood1Id = moodId;
+    }
+
+    private void HandleSecondaryMood2Selected(int? moodId)
+    {
+        secondaryMood2Id = moodId;
+    }
+
+    private void HandleTagsChanged(List<int> tagIds)
+    {
+        selectedTagIds = tagIds;
+    }
+
+    private void CalculateWordCount()
+    {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            wordCount = 0;
+            return;
+        }
+
+        var words = content.Split(new[] { ' ', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        wordCount = words.Length;
+    }
+
+    private async Task SaveEntry()
+    {
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+
+        // Validation
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            errorMessage = "Title is required";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            errorMessage = "Content is required";
+            return;
+        }
+
+        if (!primaryMoodId.HasValue)
+        {
+            errorMessage = "Primary mood is required";
+            return;
+        }
+
+        isSaving = true;
+
+        try
+        {
+            CalculateWordCount();
+
+            if (isEditMode && currentEntryId.HasValue)
+            {
+                var entry = await Repository.GetEntryByIdAsync(currentEntryId.Value);
+                if (entry != null)
+                {
+                    entry.Title = title;
+                    entry.Content = content;
+                    entry.Category = string.IsNullOrWhiteSpace(category) ? null : category;
+                    entry.PrimaryMoodId = primaryMoodId.Value;
+                    entry.SecondaryMood1Id = secondaryMood1Id;
+                    entry.SecondaryMood2Id = secondaryMood2Id;
+                    entry.WordCount = wordCount;
+
+                    // Update tags
+                    entry.EntryTags.Clear();
+                    foreach (var tagId in selectedTagIds)
+                    {
+                        entry.EntryTags.Add(new EntryTag { EntryId = entry.Id, TagId = tagId });
+                    }
+
+                    await Repository.UpdateEntryAsync(entry);
+                    successMessage = "Entry updated successfully!";
+                }
+            }
+            else
+            {
+                var newEntry = new JournalEntry
+                {
+                    Date = DateTime.Today,
+                    Title = title,
+                    Content = content,
+                    Category = string.IsNullOrWhiteSpace(category) ? null : category,
+                    PrimaryMoodId = primaryMoodId.Value,
+                    SecondaryMood1Id = secondaryMood1Id,
+                    SecondaryMood2Id = secondaryMood2Id,
+                    WordCount = wordCount
+                };
+
+                var createdEntry = await Repository.CreateEntryAsync(newEntry);
+
+                // Add tags
+                foreach (var tagId in selectedTagIds)
+                {
+                    createdEntry.EntryTags.Add(new EntryTag { EntryId = createdEntry.Id, TagId = tagId });
+                }
+
+                if (selectedTagIds.Any())
+                {
+                    await Repository.UpdateEntryAsync(createdEntry);
+                }
+
+                successMessage = "Entry created successfully!";
+                isEditMode = true;
+                currentEntryId = createdEntry.Id;
+            }
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error saving entry: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void ShowDeleteConfirm()
+    {
+        confirmMessage = "Are you sure you want to delete this entry? This action cannot be undone.";
+        showConfirmDialog = true;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        showConfirmDialog = false;
+
+        if (currentEntryId.HasValue)
+        {
+            try
+            {
+                await Repository.DeleteEntryAsync(currentEntryId.Value);
+                Navigation.NavigateTo("/timeline");
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Error deleting entry: {ex.Message}";
+            }
+        }
+    }
+
+    private void CancelDelete()
+    {
+        showConfirmDialog = false;
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

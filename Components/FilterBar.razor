@@ -1,0 +1,73 @@
+@using JournalApp.Models
+
+<div class="filter-bar">
+    <div class="filter-section">
+        <label>Date Range</label>
+        <div class="date-inputs">
+            <input type="date" @bind="startDate" class="filter-input" />
+            <span>to</span>
+            <input type="date" @bind="endDate" class="filter-input" />
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <label>Moods</label>
+        <select multiple size="5" class="filter-select" @bind="selectedMoodIds">
+            @foreach (var mood in Moods)
+            {
+                <option value="@mood.Id">@mood.Emoji @mood.Name</option>
+            }
+        </select>
+        <small class="hint">Leave empty = all moods</small>
+    </div>
+
+    <div class="filter-section">
+        <label>Tags</label>
+        <select multiple size="5" class="filter-select" @bind="selectedTagIds">
+            @foreach (var tag in Tags)
+            {
+                <option value="@tag.Id">@tag.Name</option>
+            }
+        </select>
+        <small class="hint">Leave empty = all tags</small>
+    </div>
+
+    <div class="filter-actions">
+        <button type="button" @onclick="ApplyFilter" class="btn-primary">Apply Filters</button>
+        <button type="button" @onclick="ClearFilters" class="btn-secondary">Clear</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<Mood> Moods { get; set; } = new();
+    [Parameter] public List<Tag> Tags { get; set; } = new();
+
+    // Keep your tuple callback
+    [Parameter]
+    public EventCallback<(DateTime?, DateTime?, List<int>?, List<int>?)> OnFilter { get; set; }
+
+    private DateTime? startDate;
+    private DateTime? endDate;
+
+    // IMPORTANT: for <select multiple> bind to List<int>
+    private List<int> selectedMoodIds = new();
+    private List<int> selectedTagIds = new();
+
+    private async Task ApplyFilter()
+    {
+        var moodIds = selectedMoodIds.Count > 0 ? selectedMoodIds : null;
+        var tagIds = selectedTagIds.Count > 0 ? selectedTagIds : null;
+
+        await OnFilter.InvokeAsync((startDate, endDate, moodIds, tagIds));
+    }
+
+    private async Task ClearFilters()
+    {
+        startDate = null;
+        endDate = null;
+        selectedMoodIds = new();
+        selectedTagIds = new();
+
+        await OnFilter.InvokeAsync((null, null, null, null));
+    }
+}

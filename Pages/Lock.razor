@@ -1,0 +1,66 @@
+@page "/lock"
+@inject AuthService AuthService
+
+<div class="lock-screen">
+    <div class="lock-container">
+        <div class="lock-icon">🔒</div>
+        <h1>Journal Locked</h1>
+        <p>Enter your password to continue</p>
+
+        <div class="lock-form">
+            <input 
+                type="password" 
+                @bind="password" 
+                @onkeypress="HandleKeyPress"
+                placeholder="Enter password" 
+                class="lock-input" 
+                autofocus />
+            
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <p class="error-message">@errorMessage</p>
+            }
+
+            <button @onclick="Unlock" class="unlock-button">Unlock</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnUnlocked { get; set; }
+
+    private string password = string.Empty;
+    private string errorMessage = string.Empty;
+
+    private async Task Unlock()
+    {
+        errorMessage = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "Please enter a password";
+            return;
+        }
+
+        var isValid = await AuthService.ValidatePasswordAsync(password);
+
+        if (isValid)
+        {
+            await OnUnlocked.InvokeAsync();
+        }
+        else
+        {
+            errorMessage = "Incorrect password";
+            password = string.Empty;
+        }
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Unlock();
+        }
+    }
+}

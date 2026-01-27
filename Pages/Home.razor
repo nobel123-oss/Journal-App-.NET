@@ -1,0 +1,140 @@
+@page "/"
+@inject IJournalRepository Repository
+@inject StreakService StreakService
+@inject NavigationManager Navigation
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>Welcome to Your Journal</h1>
+        <p class="page-subtitle">@greeting</p>
+    </div>
+
+    @if (isLoading)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="home-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-info">
+                    <p class="stat-label">Current Streak</p>
+                    <p class="stat-value">@currentStreak days</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-info">
+                    <p class="stat-label">Longest Streak</p>
+                    <p class="stat-value">@longestStreak days</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-info">
+                    <p class="stat-label">Total Entries</p>
+                    <p class="stat-value">@totalEntries</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-info">
+                    <p class="stat-label">Today's Entry</p>
+                    <p class="stat-value">@(hasTodayEntry ? "✓ Done" : "✗ Not yet")</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                @if (!hasTodayEntry)
+                {
+                    <button @onclick="GoToToday" class="action-button primary">
+                        <span class="button-icon">✏️</span>
+                        Write Today's Entry
+                    </button>
+                }
+                else
+                {
+                    <button @onclick="GoToToday" class="action-button secondary">
+                        <span class="button-icon">👁️</span>
+                        View Today's Entry
+                    </button>
+                }
+                
+                <button @onclick="GoToTimeline" class="action-button secondary">
+                    <span class="button-icon">📖</span>
+                    Browse Timeline
+                </button>
+                
+                <button @onclick="GoToAnalytics" class="action-button secondary">
+                    <span class="button-icon">📊</span>
+                    View Analytics
+                </button>
+            </div>
+        </div>
+
+        @if (recentEntries.Any())
+        {
+            <div class="recent-entries">
+                <h2>Recent Entries</h2>
+                <div class="entry-list">
+                    @foreach (var entry in recentEntries)
+                    {
+                        <div class="entry-preview" @onclick="() => ViewEntry(entry.Id)">
+                            <div class="entry-date">@entry.Date.ToString("MMM dd, yyyy")</div>
+                            <div class="entry-title">@entry.Title</div>
+                            <div class="entry-mood">@entry.PrimaryMood?.Emoji @entry.PrimaryMood?.Name</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private bool isLoading = true;
+    private int currentStreak;
+    private int longestStreak;
+    private int totalEntries;
+    private bool hasTodayEntry;
+    private List<JournalEntry> recentEntries = new();
+    private string greeting = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        greeting = GetGreeting();
+        await LoadData();
+        isLoading = false;
+    }
+
+    private async Task LoadData()
+    {
+        currentStreak = await StreakService.GetCurrentStreakAsync();
+        longestStreak = await StreakService.GetLongestStreakAsync();
+        totalEntries = await StreakService.GetTotalEntriesAsync();
+        hasTodayEntry = await Repository.EntryExistsForDateAsync(DateTime.Today);
+
+        var allEntries = await Repository.GetAllEntriesAsync();
+        recentEntries = allEntries.Take(5).ToList();
+    }
+
+    private string GetGreeting()
+    {
+        var hour = DateTime.Now.Hour;
+        if (hour < 12) return "Good morning";
+        if (hour < 18) return "Good afternoon";
+        return "Good evening";
+    }
+
+    private void GoToToday() => Navigation.NavigateTo("/today");
+    private void GoToTimeline() => Navigation.NavigateTo("/timeline");
+    private void GoToAnalytics() => Navigation.NavigateTo("/analytics");
+    private void ViewEntry(int id) => Navigation.NavigateTo($"/today?id={id}");
+}
