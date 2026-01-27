@@ -17,7 +17,7 @@
     {
         <div class="home-grid">
             <div class="stat-card">
-                <div class="stat-icon">🔥</div>
+                <div class="stat-icon"></div>
                 <div class="stat-info">
                     <p class="stat-label">Current Streak</p>
                     <p class="stat-value">@currentStreak days</p>
@@ -25,7 +25,7 @@
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon">🏆</div>
+                <div class="stat-icon"></div>
                 <div class="stat-info">
                     <p class="stat-label">Longest Streak</p>
                     <p class="stat-value">@longestStreak days</p>
@@ -33,7 +33,7 @@
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon">📝</div>
+                <div class="stat-icon"></div>
                 <div class="stat-info">
                     <p class="stat-label">Total Entries</p>
                     <p class="stat-value">@totalEntries</p>
@@ -41,7 +41,7 @@
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon">📅</div>
+                <div class="stat-icon"></div>
                 <div class="stat-info">
                     <p class="stat-label">Today's Entry</p>
                     <p class="stat-value">@(hasTodayEntry ? "✓ Done" : "✗ Not yet")</p>
@@ -55,25 +55,25 @@
                 @if (!hasTodayEntry)
                 {
                     <button @onclick="GoToToday" class="action-button primary">
-                        <span class="button-icon">✏️</span>
+                        <span class="button-icon"></span>
                         Write Today's Entry
                     </button>
                 }
                 else
                 {
                     <button @onclick="GoToToday" class="action-button secondary">
-                        <span class="button-icon">👁️</span>
+                        <span class="button-icon"></span>
                         View Today's Entry
                     </button>
                 }
                 
                 <button @onclick="GoToTimeline" class="action-button secondary">
-                    <span class="button-icon">📖</span>
+                    <span class="button-icon"></span>
                     Browse Timeline
                 </button>
                 
                 <button @onclick="GoToAnalytics" class="action-button secondary">
-                    <span class="button-icon">📊</span>
+                    <span class="button-icon"></span>
                     View Analytics
                 </button>
             </div>

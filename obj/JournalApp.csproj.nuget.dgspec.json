@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\.NET course work\\JournalApp_COMPLETE\\JournalApp\\JournalApp.csproj": {}
+    "D:\\.NET course work\\JournalApp Code\\JournalApp.csproj": {}
   },
   "projects": {
-    "D:\\.NET course work\\JournalApp_COMPLETE\\JournalApp\\JournalApp.csproj": {
+    "D:\\.NET course work\\JournalApp Code\\JournalApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\.NET course work\\JournalApp_COMPLETE\\JournalApp\\JournalApp.csproj",
+        "projectUniqueName": "D:\\.NET course work\\JournalApp Code\\JournalApp.csproj",
         "projectName": "JournalApp",
-        "projectPath": "D:\\.NET course work\\JournalApp_COMPLETE\\JournalApp\\JournalApp.csproj",
+        "projectPath": "D:\\.NET course work\\JournalApp Code\\JournalApp.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\.NET course work\\JournalApp_COMPLETE\\JournalApp\\obj\\",
+        "outputPath": "D:\\.NET course work\\JournalApp Code\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
