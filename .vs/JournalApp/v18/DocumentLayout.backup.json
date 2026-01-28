@@ -3,28 +3,24 @@
   "WorkspaceRootPath": "D:\\.NET course work\\JournalApp Code\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\settings.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\settings.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\shared\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:shared\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\today.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\today.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\timeline.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\timeline.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\settings.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\settings.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\services\\exportpdfservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:services\\exportpdfservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\lock.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\lock.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\calendar.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -35,16 +31,16 @@
       "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\analytics.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\today.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\today.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\pages\\timeline.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:pages\\timeline.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\components\\filterbar.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:components\\filterbar.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\services\\exportpdfservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|solutionrelative:services\\exportpdfservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8B7E9A3F-1C2D-4E5F-6A7B-8C9D0E1F2A3B}|JournalApp.csproj|d:\\.net course work\\journalapp code\\main.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -58,20 +54,93 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MainPage.xaml.cs",
-              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\MainPage.xaml.cs",
-              "RelativeDocumentMoniker": "MainPage.xaml.cs",
-              "ToolTip": "D:\\.NET course work\\JournalApp Code\\MainPage.xaml.cs",
-              "RelativeToolTip": "MainPage.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 6,
+              "Title": "Analytics.razor",
+              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Analytics.razor",
+              "RelativeDocumentMoniker": "Pages\\Analytics.razor",
+              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Analytics.razor",
+              "RelativeToolTip": "Pages\\Analytics.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-27T17:24:58.377Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Calendar.razor",
+              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Calendar.razor",
+              "RelativeDocumentMoniker": "Pages\\Calendar.razor",
+              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Calendar.razor",
+              "RelativeToolTip": "Pages\\Calendar.razor",
+              "ViewState": "AgIAALEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-27T17:24:51.333Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Today.razor",
+              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Today.razor",
+              "RelativeDocumentMoniker": "Pages\\Today.razor",
+              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Today.razor",
+              "RelativeToolTip": "Pages\\Today.razor",
+              "ViewState": "AgIAAEQBAAAAAAAAAAAAADIAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-27T13:34:32.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ExportPdfService.cs",
+              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Services\\ExportPdfService.cs",
+              "RelativeDocumentMoniker": "Services\\ExportPdfService.cs",
+              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Services\\ExportPdfService.cs",
+              "RelativeToolTip": "Services\\ExportPdfService.cs",
+              "ViewState": "AgIAAHgAAAAAAAAAAAAYwHYAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-27T17:28:58.282Z",
+              "WhenOpened": "2026-01-27T13:38:27.124Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Lock.razor",
+              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Lock.razor",
+              "RelativeDocumentMoniker": "Pages\\Lock.razor",
+              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Lock.razor",
+              "RelativeToolTip": "Pages\\Lock.razor",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAAAUAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-27T17:25:26.032Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Settings.razor",
+              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Settings.razor",
+              "RelativeDocumentMoniker": "Pages\\Settings.razor",
+              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Settings.razor",
+              "RelativeToolTip": "Pages\\Settings.razor",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAAE0AAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-27T17:25:41.092Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Home.razor",
+              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "Pages\\Home.razor",
+              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Home.razor",
+              "RelativeToolTip": "Pages\\Home.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC4AAABJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-27T17:23:53.091Z"
             },
             {
               "$type": "Document",
@@ -81,104 +150,14 @@
               "RelativeDocumentMoniker": "Shared\\MainLayout.razor",
               "ToolTip": "D:\\.NET course work\\JournalApp Code\\Shared\\MainLayout.razor",
               "RelativeToolTip": "Shared\\MainLayout.razor",
-              "ViewState": "AgIAADkAAAAAAAAAAAAAAC0AAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAADEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-01-27T17:28:14.663Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Lock.razor",
-              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Lock.razor",
-              "RelativeDocumentMoniker": "Pages\\Lock.razor",
-              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Lock.razor",
-              "RelativeToolTip": "Pages\\Lock.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-27T17:25:26.032Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Analytics.razor",
-              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Analytics.razor",
-              "RelativeDocumentMoniker": "Pages\\Analytics.razor",
-              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Analytics.razor",
-              "RelativeToolTip": "Pages\\Analytics.razor",
-              "ViewState": "AgIAAKsAAAAAAAAAAAAAACwAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-27T17:24:58.377Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Calendar.razor",
-              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Calendar.razor",
-              "RelativeDocumentMoniker": "Pages\\Calendar.razor",
-              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Calendar.razor",
-              "RelativeToolTip": "Pages\\Calendar.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-27T17:24:51.333Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Today.razor",
-              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Today.razor",
-              "RelativeDocumentMoniker": "Pages\\Today.razor",
-              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Today.razor",
-              "RelativeToolTip": "Pages\\Today.razor",
-              "ViewState": "AgIAAEQBAAAAAAAAAAAAADIAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-27T13:34:32.522Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Settings.razor",
-              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Settings.razor",
-              "RelativeDocumentMoniker": "Pages\\Settings.razor",
-              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Settings.razor",
-              "RelativeToolTip": "Pages\\Settings.razor",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-27T17:25:41.092Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 8,
-              "Title": "Home.razor",
-              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Home.razor",
-              "RelativeDocumentMoniker": "Pages\\Home.razor",
-              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Pages\\Home.razor",
-              "RelativeToolTip": "Pages\\Home.razor",
-              "ViewState": "AgIAAGwAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-27T17:23:53.091Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "ExportPdfService.cs",
-              "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Services\\ExportPdfService.cs",
-              "RelativeDocumentMoniker": "Services\\ExportPdfService.cs",
-              "ToolTip": "D:\\.NET course work\\JournalApp Code\\Services\\ExportPdfService.cs",
-              "RelativeToolTip": "Services\\ExportPdfService.cs",
-              "ViewState": "AgIAAF0AAAAAAAAAAAAwwHIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-27T13:38:27.124Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "Timeline.razor",
               "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Pages\\Timeline.razor",
               "RelativeDocumentMoniker": "Pages\\Timeline.razor",
@@ -186,8 +165,7 @@
               "RelativeToolTip": "Pages\\Timeline.razor",
               "ViewState": "AgIAAJYAAAAAAAAAAAAAAIgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-27T13:38:19.155Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-27T13:38:19.155Z"
             },
             {
               "$type": "Document",
@@ -203,7 +181,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 10,
               "Title": "Main.razor",
               "DocumentMoniker": "D:\\.NET course work\\JournalApp Code\\Main.razor",
               "RelativeDocumentMoniker": "Main.razor",
